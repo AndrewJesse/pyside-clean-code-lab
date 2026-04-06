@@ -19,7 +19,7 @@ class GreeterView(QWidget):
 
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("PySide Clean Code Lab")
+        self.setWindowTitle("PySide Clean Code Lab — components demo")
         self._name_input = QLineEdit()
         self._name_input.setPlaceholderText("Name")
         self._greeting_label = QLabel("")

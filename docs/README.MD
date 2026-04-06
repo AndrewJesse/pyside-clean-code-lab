@@ -4,6 +4,8 @@ Small **PySide6 Qt Widgets** demo repo for teaching **Clean Code** and **layerin
 
 **Learning path:** open [WALKTHROUGH.MD](WALKTHROUGH.MD) on your current branch — each branch’s walkthrough matches the code on that branch.
 
+**Architecture vocabulary (components / integration):** on branch `topic/component-boundaries-and-integration`, read [COMPONENT_ARCHITECTURE.MD](COMPONENT_ARCHITECTURE.MD).
+
 **No QML** — widgets only, on purpose.
 
 ## Run

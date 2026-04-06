@@ -1,4 +1,4 @@
-from display_line import format_greeting
+from greeting_domain.rules import format_greeting
 
 
 class CasualGreetingStrategy:
@@ -12,7 +12,7 @@ class FormalGreetingStrategy:
 
 
 class DefaultHelloStrategy:
-    """Same wording as early lessons; useful for tests and default combo slot."""
+    """Same wording as the default domain helper; useful for tests and combo slot 0."""
 
     def format(self, name: str) -> str:
         return format_greeting(name)

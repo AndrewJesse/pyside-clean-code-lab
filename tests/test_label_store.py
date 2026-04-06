@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from label_store import FileLabelStore, InMemoryLabelStore
+from greeting_persistence import FileLabelStore, InMemoryLabelStore
 
 
 def test_in_memory_label_store_roundtrip() -> None:

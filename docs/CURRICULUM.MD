@@ -96,3 +96,15 @@ git diff main...lesson/04-dip-repository-strategy
 Optional: tag `baseline-widgets` on `main` after baseline is stable.
 
 See [README.MD](README.MD) for run instructions and [LISTING.MD](LISTING.MD) for optional HMI/architect role context.
+
+---
+
+## Topic branch — `topic/component-boundaries-and-integration`
+
+Same behavior as **lesson 04**, reorganized into **components** (`contracts`, `greeting_domain`, `greeting_strategies`, `greeting_persistence`, `greeting_ui_qt`) and an **`integration/`** composition root. Teaches vocabulary: **boundaries**, **interfaces**, **deployment units**, **integration** (see job-style context in [LISTING.MD](LISTING.MD)).
+
+**Read:** [COMPONENT_ARCHITECTURE.MD](COMPONENT_ARCHITECTURE.MD) · **Walkthrough:** [WALKTHROUGH.MD](WALKTHROUGH.MD) on this branch.
+
+```bash
+git diff lesson/04-dip-repository-strategy...topic/component-boundaries-and-integration
+```

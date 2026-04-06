@@ -1,13 +1,16 @@
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QMessageBox
 
-from display_line import GreetingStrategy, apply_greeting_message
-from greeter_view import GreeterView
-from label_store import LabelStore
+from contracts.ports import GreetingStrategy, LabelStore
+from greeting_domain.rules import apply_greeting_message
+from greeting_ui_qt.view import GreeterView
 
 
-class GreeterController(QObject):
-    """Depends on abstractions (store + strategies); composed in main.py."""
+class GreeterPresenter(QObject):
+    """
+    Application logic for the greeter feature: depends on ports (LabelStore, strategies),
+    not on concrete persistence or strategy classes.
+    """
 
     def __init__(
         self,

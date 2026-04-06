@@ -1,11 +1,4 @@
 from pathlib import Path
-from typing import Protocol
-
-
-class LabelStore(Protocol):
-    def load(self) -> str: ...
-
-    def save(self, text: str) -> None: ...
 
 
 class InMemoryLabelStore:

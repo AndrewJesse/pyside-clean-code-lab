@@ -1,13 +1,9 @@
-"""Pure display-string logic (no Qt). Single place for normalization, validation rules, and formatting."""
+"""Pure greeting rules. Depends only on contracts for strategy typing."""
 
-from typing import Protocol
+from contracts.ports import GreetingStrategy
 
 _EMPTY_LABEL_PROMPT = "Enter a name and click Apply."
 _MAX_NAME_LEN = 40
-
-
-class GreetingStrategy(Protocol):
-    def format(self, name: str) -> str: ...
 
 
 def normalized_name(raw: str) -> str:
@@ -30,7 +26,7 @@ def format_greeting(name: str) -> str:
 
 
 def build_display_line(raw: str) -> str:
-    """Build label text without raising; used by tests and for passive empty-state copy."""
+    """Build label text without raising; used for passive empty-state copy."""
     name = normalized_name(raw)
     if not name:
         return _EMPTY_LABEL_PROMPT

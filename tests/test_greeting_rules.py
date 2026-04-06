@@ -1,10 +1,10 @@
-from display_line import (
+from greeting_domain.rules import (
     apply_greeting_message,
     build_display_line,
     normalized_name,
     validation_error_for_name,
 )
-from greeting_strategy import CasualGreetingStrategy, DefaultHelloStrategy
+from greeting_strategies import CasualGreetingStrategy, DefaultHelloStrategy
 
 _DEFAULT = DefaultHelloStrategy()
 
