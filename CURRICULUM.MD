@@ -1,40 +1,31 @@
-# Curriculum: four lesson branches
+# Curriculum: three lesson branches
 
 Super-minimal **PySide6 Qt Widgets** UI (one window) to show *why* structure matters. **No QML.** **pytest** on every branch for non-Qt code.
+
+**Naming + small functions** are *not* a separate branch: when you split **view / controller / domain** (lesson 01), call out **meaningful names** and **small, single-purpose methods** in passing—that lesson already forces clearer boundaries and readable private methods (`_build_ui`, `_wire_signals`, etc.) if you narrate them while refactoring.
 
 ## Shared toy feature
 
 - `QLineEdit` — user types a short string (e.g. name).
 - `QPushButton` — **Apply** updates a `QLabel` from pure Python logic.
-- **Lesson 04 only** — add **Load / Save** plus a **style** picker (`QComboBox` or radios) for repository + strategy.
+- **Lesson 03 only** — add **Load / Save** plus a **style** picker (`QComboBox` or radios) for repository + strategy.
 
 Baseline on `main`: line edit, Apply, label; logic in [`display_line.py`](display_line.py); tests in [`tests/`](tests/).
 
 ---
 
-## Branch 1 — `lesson/01-names-and-functions`
+## Branch 1 — `lesson/01-srp-and-separation-of-concerns`
 
 | | |
 |--|--|
-| **Topics** | Meaningful names · small functions (one level of abstraction) |
-| **UI** | Same as baseline |
-| **Code** | One class doing everything → refactor into **small private methods** with clear names (`_build_ui`, `_wire_signals`, …); behavior unchanged |
-| **Tests** | pytest on pure helpers |
-
----
-
-## Branch 2 — `lesson/02-srp-and-separation-of-concerns`
-
-| | |
-|--|--|
-| **Topics** | Single Responsibility · separation of concerns |
-| **UI** | Unchanged |
+| **Topics** | Single Responsibility · separation of concerns · *(in passing: meaningful names, small functions)* |
+| **UI** | Unchanged from baseline |
 | **Code** | **View** (widgets only) · **controller** (wiring) · **domain** (no Qt imports) |
 | **Tests** | pytest on domain (and thin controller if useful) |
 
 ---
 
-## Branch 3 — `lesson/03-dry-and-error-handling`
+## Branch 2 — `lesson/02-dry-and-error-handling`
 
 | | |
 |--|--|
@@ -45,7 +36,7 @@ Baseline on `main`: line edit, Apply, label; logic in [`display_line.py`](displa
 
 ---
 
-## Branch 4 — `lesson/04-dip-repository-strategy`
+## Branch 3 — `lesson/03-dip-repository-strategy`
 
 | | |
 |--|--|
@@ -59,7 +50,7 @@ Baseline on `main`: line edit, Apply, label; logic in [`display_line.py`](displa
 ## Video / git workflow
 
 ```bash
-git diff main...lesson/01-names-and-functions
+git diff main...lesson/01-srp-and-separation-of-concerns
 ```
 
 Optional: tag `baseline-widgets` on `main` after baseline is stable.
