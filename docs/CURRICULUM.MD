@@ -14,6 +14,8 @@ Baseline on `main`: line edit, Apply, label; logic in [`display_line.py`](../dis
 
 ## Branch 1 — `lesson/01-names-and-functions`
 
+**Lesson doc:** [lessons/01-names-and-functions/README.MD](lessons/01-names-and-functions/README.MD)
+
 | | |
 |--|--|
 | **Topics** | Meaningful names · small functions (one level of abstraction per method) |

@@ -24,7 +24,8 @@ python main.py
 
 ## Lessons
 
-See **[CURRICULUM.MD](CURRICULUM.MD)** for all four branches and topics.
+- **Per-lesson notes:** [lessons/README.MD](lessons/README.MD) (folder per lesson under `docs/lessons/`)
+- **Overview table:** [CURRICULUM.MD](CURRICULUM.MD) for all four branches and topics
 
 ## Optional context
 
