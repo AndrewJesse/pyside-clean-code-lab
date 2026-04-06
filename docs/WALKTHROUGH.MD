@@ -1,81 +1,75 @@
-# Walkthrough — baseline (`main`)
+# Walkthrough — `lesson/02-srp-and-separation-of-concerns`
 
-Use this document **on the `main` branch**. It steps through what exists here and *why* it is structured this way. Later branches add lessons; each branch has its own `docs/WALKTHROUGH.MD` that builds on this.
+You are on **`lesson/02-srp-and-separation-of-concerns`**. This covers **baseline → Lesson 01 (names/small methods) → Lesson 02 (SRP / separation of concerns)**.
 
 ---
 
-## 0. Setup
-
-From the repository root:
+## 0. Setup and checks
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+git checkout lesson/02-srp-and-separation-of-concerns
 pip install -r requirements.txt
-```
-
----
-
-## 1. Run the tests (always do this first)
-
-```bash
 pytest -v
-```
-
-You should see **2** tests pass.
-
-Open [`tests/test_display_line.py`](../tests/test_display_line.py). Notice:
-
-- Tests import **`display_line`** only — no Qt, no windows. That is intentional: **pure logic is cheap to test**.
-
-**Why this is good:** You can change the UI or add buttons later and still prove the string rules with fast tests.
-
----
-
-## 2. Read the domain module
-
-Open [`display_line.py`](../display_line.py).
-
-- `build_display_line(raw)` trims whitespace, treats “empty” as a special case, and returns a friendly prompt or `Hello, …`.
-
-**Why this is good:** One place owns the greeting rule. The UI should not duplicate string logic.
-
----
-
-## 3. Read the UI entrypoint
-
-Open [`main.py`](../main.py).
-
-Follow the flow:
-
-1. `QApplication` starts Qt.
-2. `MainWindow` builds three widgets: line edit, **Apply** button, label.
-3. Clicking **Apply** calls `_on_apply_clicked`, which passes the line text into `build_display_line` and shows the result on the label.
-
-**Why this is good (for a baseline):** Everything is in one file so a beginner can run it quickly. The tradeoff is that `MainWindow` mixes **layout**, **wiring**, and **calling domain** in one class — later branches split that up.
-
----
-
-## 4. Run the app
-
-```bash
 python main.py
 ```
 
-Try:
-
-- Empty input + **Apply** → you should see the “Enter a name…” prompt on the label.
-- A name with extra spaces → greeting uses the trimmed name.
+Tests: **2** — still only testing [`display_line.py`](../display_line.py) (domain).
 
 ---
 
-## 5. Reflect (short answers for yourself)
+## 1. See how the code is split
 
-1. If you changed the greeting format to “Hi, {name}!”, which **single function** should you edit?
-2. Why can `test_display_line.py` run without a display server?
+Open these three files **in this order**:
+
+| Order | File | Responsibility |
+|------|------|------------------|
+| 1 | [`greeter_view.py`](../greeter_view.py) | **View** — builds widgets, exposes `current_name`, `set_greeting_text`, signal `apply_clicked`. No `build_display_line`. |
+| 2 | [`greeter_controller.py`](../greeter_controller.py) | **Controller** — connects `apply_clicked` to domain; no layout code. |
+| 3 | [`display_line.py`](../display_line.py) | **Domain** — pure Python, no Qt imports. |
+| 4 | [`main.py`](../main.py) | **Composition root** — creates `QApplication`, `GreeterView`, `GreeterController`, shows window. |
+
+**Why this is good:**
+
+- **Single Responsibility:** each file has one reason to change (UI layout vs wiring vs string rules vs startup).
+- **Separation of concerns:** you can reason about greeting *rules* without reading Qt widget code.
+- **Testability:** pytest still hits domain without spinning up a GUI.
+
+---
+
+## 2. Diff against the previous lesson
+
+vs Lesson 01 (structure only):
+
+```bash
+git diff lesson/01-names-and-functions...lesson/02-srp-and-separation-of-concerns
+```
+
+vs baseline:
+
+```bash
+git diff main...lesson/02-srp-and-separation-of-concerns
+```
+
+**What to narrate in a video:** “We moved widget creation out of the controller and domain out of the view.”
+
+---
+
+## 3. Trace Apply click
+
+1. `GreeterView` button emits **`apply_clicked`**.
+2. `GreeterController._on_apply_clicked` reads `view.current_name()`, calls **`build_display_line`**, writes `view.set_greeting_text(...)`.
+
+**Why this is good:** Dependencies point **inward** toward domain; the view does not import `display_line`.
+
+---
+
+## 4. Reflect
+
+1. If you changed from `QLabel` to `QPlainTextEdit`, which file would change the most? Which would stay stable?
+2. Why does `test_display_line.py` still not import `PySide6`?
 
 ---
 
 ## Next
 
-Checkout **`lesson/01-names-and-functions`** and open `docs/WALKTHROUGH.MD` there to see how naming and small methods improve `MainWindow` without changing behavior.
+Checkout **`lesson/03-dry-and-error-handling`** for **one validation path** and **QMessageBox** error handling.
