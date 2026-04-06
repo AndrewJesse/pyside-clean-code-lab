@@ -1,6 +1,7 @@
 from PySide6.QtCore import QObject
+from PySide6.QtWidgets import QMessageBox
 
-from display_line import build_display_line
+from display_line import apply_greeting_message
 from greeter_view import GreeterView
 
 
@@ -13,5 +14,9 @@ class GreeterController(QObject):
         self._view.apply_clicked.connect(self._on_apply_clicked)
 
     def _on_apply_clicked(self) -> None:
-        message = build_display_line(self._view.current_name())
-        self._view.set_greeting_text(message)
+        greeting, error_message = apply_greeting_message(self._view.current_name())
+        if error_message is not None:
+            QMessageBox.warning(self._view, "Invalid input", error_message)
+            return
+        assert greeting is not None
+        self._view.set_greeting_text(greeting)
