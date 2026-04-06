@@ -2,6 +2,8 @@
 
 Super-minimal **PySide6 Qt Widgets** UI (one window) to show *why* structure matters. **No QML.** **pytest** on every branch for non-Qt code.
 
+**Step-by-step learning:** [WALKTHROUGH.MD](WALKTHROUGH.MD) — on each checkout, that file matches the branch (baseline on `main`, extended on lesson branches).
+
 ## Shared toy feature
 
 - `QLineEdit` — user types a short string (e.g. name).
