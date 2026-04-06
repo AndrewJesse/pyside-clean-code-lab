@@ -1,7 +1,13 @@
 """Pure display-string logic (no Qt). Single place for normalization, validation rules, and formatting."""
 
+from typing import Protocol
+
 _EMPTY_LABEL_PROMPT = "Enter a name and click Apply."
 _MAX_NAME_LEN = 40
+
+
+class GreetingStrategy(Protocol):
+    def format(self, name: str) -> str: ...
 
 
 def normalized_name(raw: str) -> str:
@@ -31,7 +37,10 @@ def build_display_line(raw: str) -> str:
     return format_greeting(name)
 
 
-def apply_greeting_message(raw: str) -> tuple[str | None, str | None]:
+def apply_greeting_message(
+    raw: str,
+    strategy: GreetingStrategy,
+) -> tuple[str | None, str | None]:
     """
     Single validation path for Apply: returns (greeting, error).
     If error is not None, greeting is None.
@@ -39,4 +48,5 @@ def apply_greeting_message(raw: str) -> tuple[str | None, str | None]:
     err = validation_error_for_name(raw)
     if err is not None:
         return None, err
-    return format_greeting(normalized_name(raw)), None
+    name = normalized_name(raw)
+    return strategy.format(name), None

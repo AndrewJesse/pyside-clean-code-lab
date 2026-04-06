@@ -4,6 +4,9 @@ from display_line import (
     normalized_name,
     validation_error_for_name,
 )
+from greeting_strategy import CasualGreetingStrategy, DefaultHelloStrategy
+
+_DEFAULT = DefaultHelloStrategy()
 
 
 def test_build_display_line_trims_and_formats() -> None:
@@ -27,18 +30,24 @@ def test_validation_error_for_name() -> None:
 
 
 def test_apply_greeting_message_success() -> None:
-    greeting, err = apply_greeting_message("  Ada  ")
+    greeting, err = apply_greeting_message("  Ada  ", _DEFAULT)
     assert err is None
     assert greeting == "Hello, Ada!"
 
 
+def test_apply_greeting_message_casual_strategy() -> None:
+    greeting, err = apply_greeting_message("Ada", CasualGreetingStrategy())
+    assert err is None
+    assert greeting == "Hey Ada!"
+
+
 def test_apply_greeting_message_empty() -> None:
-    greeting, err = apply_greeting_message("  ")
+    greeting, err = apply_greeting_message("  ", _DEFAULT)
     assert greeting is None
     assert err is not None
 
 
 def test_apply_greeting_message_too_long() -> None:
-    greeting, err = apply_greeting_message("x" * 41)
+    greeting, err = apply_greeting_message("x" * 41, _DEFAULT)
     assert greeting is None
     assert "too long" in (err or "").lower()
