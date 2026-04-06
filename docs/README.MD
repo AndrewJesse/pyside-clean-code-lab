@@ -2,6 +2,8 @@
 
 Small **PySide6 Qt Widgets** demo repo for teaching **Clean Code** and **layering**: one minimal window, pure Python logic where it is easy to test, and **four lesson branches** (see [CURRICULUM.MD](CURRICULUM.MD) and [lessons/](lessons/README.MD)). Run commands from the **repository root** (parent of `docs/`).
 
+**Learning path:** open [WALKTHROUGH.MD](WALKTHROUGH.MD) on your current branch — each branch’s walkthrough matches the code on that branch.
+
 **No QML** — widgets only, on purpose.
 
 ## Run
