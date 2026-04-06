@@ -1,81 +1,76 @@
-# Walkthrough — baseline (`main`)
+# Walkthrough — `lesson/03-dry-and-error-handling`
 
-Use this document **on the `main` branch**. It steps through what exists here and *why* it is structured this way. Later branches add lessons; each branch has its own `docs/WALKTHROUGH.MD` that builds on this.
+You are on **`lesson/03-dry-and-error-handling`**. This walkthrough covers **through Lesson 03: DRY** (don’t repeat validation/format rules) and **explicit error handling** (no silent failures).
 
 ---
 
-## 0. Setup
-
-From the repository root:
+## 0. Setup and checks
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+git checkout lesson/03-dry-and-error-handling
 pip install -r requirements.txt
-```
-
----
-
-## 1. Run the tests (always do this first)
-
-```bash
 pytest -v
-```
-
-You should see **2** tests pass.
-
-Open [`tests/test_display_line.py`](../tests/test_display_line.py). Notice:
-
-- Tests import **`display_line`** only — no Qt, no windows. That is intentional: **pure logic is cheap to test**.
-
-**Why this is good:** You can change the UI or add buttons later and still prove the string rules with fast tests.
-
----
-
-## 2. Read the domain module
-
-Open [`display_line.py`](../display_line.py).
-
-- `build_display_line(raw)` trims whitespace, treats “empty” as a special case, and returns a friendly prompt or `Hello, …`.
-
-**Why this is good:** One place owns the greeting rule. The UI should not duplicate string logic.
-
----
-
-## 3. Read the UI entrypoint
-
-Open [`main.py`](../main.py).
-
-Follow the flow:
-
-1. `QApplication` starts Qt.
-2. `MainWindow` builds three widgets: line edit, **Apply** button, label.
-3. Clicking **Apply** calls `_on_apply_clicked`, which passes the line text into `build_display_line` and shows the result on the label.
-
-**Why this is good (for a baseline):** Everything is in one file so a beginner can run it quickly. The tradeoff is that `MainWindow` mixes **layout**, **wiring**, and **calling domain** in one class — later branches split that up.
-
----
-
-## 4. Run the app
-
-```bash
 python main.py
 ```
 
-Try:
-
-- Empty input + **Apply** → you should see the “Enter a name…” prompt on the label.
-- A name with extra spaces → greeting uses the trimmed name.
+Tests: **7** — domain and validation paths are now fully covered without Qt.
 
 ---
 
-## 5. Reflect (short answers for yourself)
+## 1. Read the single “Apply pipeline”
 
-1. If you changed the greeting format to “Hi, {name}!”, which **single function** should you edit?
-2. Why can `test_display_line.py` run without a display server?
+Open [`display_line.py`](../display_line.py) and follow **one path** from raw input to result:
+
+1. **`normalized_name`** — trimming happens here only (shared building block).
+2. **`validation_error_for_name`** — empty vs too-long rules in **one** place.
+3. **`apply_greeting_message(raw)`** — returns `(greeting, error)`:
+   - if `error` is set, **greeting** is `None`;
+   - if valid, **error** is `None`.
+
+**Why this is good (DRY):** Apply, future features (Save, batch import), and tests all use the **same** rules. You do not copy-paste “if empty…” in the controller and again in another dialog.
+
+**Why tuple return is good:** Callers must decide how to show failure (dialog, status bar, log) without the domain importing Qt.
+
+---
+
+## 2. See errors in the UI
+
+Open [`greeter_controller.py`](../greeter_controller.py), `_on_apply_clicked`:
+
+- If `error_message` is not `None`, it calls **`QMessageBox.warning`** and **returns** (does not update the greeting label with garbage).
+
+**Why this is good:** Users see *that* something went wrong; you avoid silently ignoring bad input (a common maintenance bug).
+
+**Try it:** run the app, leave the name empty, click **Apply** — you should get a dialog, not a silent no-op.
+
+---
+
+## 3. Read the tests as documentation
+
+Open [`tests/test_display_line.py`](../tests/test_display_line.py).
+
+- Tests for **`validation_error_for_name`** and **`apply_greeting_message`** encode the product rules.
+- When someone asks “what’s invalid?”, point them here first.
+
+---
+
+## 4. Diff vs Lesson 02
+
+```bash
+git diff lesson/02-srp-and-separation-of-concerns...lesson/03-dry-and-error-handling
+```
+
+Narrate: domain grew **policy**; controller gained **presentation of failure**.
+
+---
+
+## 5. Reflect
+
+1. Where would you add a third rule (e.g. “no digits in name”) so you still have **one** validation path?
+2. Why should `display_line.py` avoid importing `QMessageBox`?
 
 ---
 
 ## Next
 
-Checkout **`lesson/01-names-and-functions`** and open `docs/WALKTHROUGH.MD` there to see how naming and small methods improve `MainWindow` without changing behavior.
+Checkout **`lesson/04-dip-repository-strategy`** for **protocols**, **LabelStore**, **GreetingStrategy**, and wiring in **`main.py`**.
