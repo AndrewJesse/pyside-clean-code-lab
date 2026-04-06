@@ -15,22 +15,45 @@ from display_line import build_display_line
 class MainWindow(QWidget):
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("PySide Clean Code Lab")
-        self._input = QLineEdit()
-        self._input.setPlaceholderText("Name")
-        self._output = QLabel("")
-        self._output.setWordWrap(True)
-        apply_btn = QPushButton("Apply")
-        apply_btn.clicked.connect(self._on_apply_clicked)
+        self._configure_window()
+        self._name_input = self._create_name_field()
+        self._apply_button = self._create_apply_button()
+        self._greeting_label = self._create_greeting_label()
+        self._build_layout()
+        self._wire_signals()
 
+    def _configure_window(self) -> None:
+        self.setWindowTitle("PySide Clean Code Lab")
+
+    def _create_name_field(self) -> QLineEdit:
+        field = QLineEdit()
+        field.setPlaceholderText("Name")
+        return field
+
+    def _create_apply_button(self) -> QPushButton:
+        return QPushButton("Apply")
+
+    def _create_greeting_label(self) -> QLabel:
+        label = QLabel("")
+        label.setWordWrap(True)
+        return label
+
+    def _build_layout(self) -> None:
         layout = QVBoxLayout()
-        layout.addWidget(self._input)
-        layout.addWidget(apply_btn)
-        layout.addWidget(self._output)
+        layout.addWidget(self._name_input)
+        layout.addWidget(self._apply_button)
+        layout.addWidget(self._greeting_label)
         self.setLayout(layout)
 
+    def _wire_signals(self) -> None:
+        self._apply_button.clicked.connect(self._on_apply_clicked)
+
     def _on_apply_clicked(self) -> None:
-        self._output.setText(build_display_line(self._input.text()))
+        self._refresh_greeting_label()
+
+    def _refresh_greeting_label(self) -> None:
+        raw_name = self._name_input.text()
+        self._greeting_label.setText(build_display_line(raw_name))
 
 
 def main() -> None:
