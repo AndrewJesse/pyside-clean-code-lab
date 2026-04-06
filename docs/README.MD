@@ -1,6 +1,6 @@
 # PySide Clean Code Lab
 
-Small **PySide6 Qt Widgets** demo repo for teaching **Clean Code** and **layering**: one minimal window, pure Python logic where it is easy to test, and **four lesson branches** (see [CURRICULUM.MD](CURRICULUM.MD); `lesson/01-names-and-functions` exists, others pending). Run commands from the **repository root** (parent of `docs/`).
+Small **PySide6 Qt Widgets** demo repo for teaching **Clean Code** and **layering**: one minimal window, pure Python logic where it is easy to test, and **four lesson branches** (see [CURRICULUM.MD](CURRICULUM.MD) and [lessons/](lessons/README.MD)). Run commands from the **repository root** (parent of `docs/`).
 
 **No QML** — widgets only, on purpose.
 
