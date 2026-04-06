@@ -1,81 +1,110 @@
-# Walkthrough — baseline (`main`)
+# Walkthrough — `lesson/04-dip-repository-strategy`
 
-Use this document **on the `main` branch**. It steps through what exists here and *why* it is structured this way. Later branches add lessons; each branch has its own `docs/WALKTHROUGH.MD` that builds on this.
+You are on **`lesson/04-dip-repository-strategy`**. This is the **full stack** of the lab: lessons **01–04**, ending with **Dependency Inversion**, a **repository-style `LabelStore`**, and **Strategy** for greeting wording.
 
 ---
 
-## 0. Setup
-
-From the repository root:
+## 0. Setup and checks
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+git checkout lesson/04-dip-repository-strategy
 pip install -r requirements.txt
-```
-
----
-
-## 1. Run the tests (always do this first)
-
-```bash
 pytest -v
-```
-
-You should see **2** tests pass.
-
-Open [`tests/test_display_line.py`](../tests/test_display_line.py). Notice:
-
-- Tests import **`display_line`** only — no Qt, no windows. That is intentional: **pure logic is cheap to test**.
-
-**Why this is good:** You can change the UI or add buttons later and still prove the string rules with fast tests.
-
----
-
-## 2. Read the domain module
-
-Open [`display_line.py`](../display_line.py).
-
-- `build_display_line(raw)` trims whitespace, treats “empty” as a special case, and returns a friendly prompt or `Hello, …`.
-
-**Why this is good:** One place owns the greeting rule. The UI should not duplicate string logic.
-
----
-
-## 3. Read the UI entrypoint
-
-Open [`main.py`](../main.py).
-
-Follow the flow:
-
-1. `QApplication` starts Qt.
-2. `MainWindow` builds three widgets: line edit, **Apply** button, label.
-3. Clicking **Apply** calls `_on_apply_clicked`, which passes the line text into `build_display_line` and shows the result on the label.
-
-**Why this is good (for a baseline):** Everything is in one file so a beginner can run it quickly. The tradeoff is that `MainWindow` mixes **layout**, **wiring**, and **calling domain** in one class — later branches split that up.
-
----
-
-## 4. Run the app
-
-```bash
 python main.py
 ```
 
-Try:
-
-- Empty input + **Apply** → you should see the “Enter a name…” prompt on the label.
-- A name with extra spaces → greeting uses the trimmed name.
+Tests: **11** — domain, validation, and **label store** adapters (no GUI driver).
 
 ---
 
-## 5. Reflect (short answers for yourself)
+## 1. Dependency Inversion (the big idea)
 
-1. If you changed the greeting format to “Hi, {name}!”, which **single function** should you edit?
-2. Why can `test_display_line.py` run without a display server?
+**High-level modules** (`GreeterController`) should depend on **abstractions** (protocols), not on concrete file paths or one fixed string format.
+
+Concrete classes are chosen in **one place**: [`main.py`](../main.py).
+
+**Steps:**
+
+1. Open [`main.py`](../main.py). Find where **`FileLabelStore`** and the **three strategy objects** are constructed and passed into **`GreeterController`**.
+2. Open [`greeter_controller.py`](../greeter_controller.py). Notice the type hints: **`LabelStore`** and a **tuple of `GreetingStrategy`**. The controller does not know about disk paths or JSON vs memory.
+
+**Why this is good:**
+
+- Swap **`InMemoryLabelStore`** in tests or a future “cloud” store without rewriting the controller.
+- Swap strategies (product branding, A/B test, locale) without branching `if` trees everywhere.
 
 ---
 
-## Next
+## 2. Repository pattern — `LabelStore`
 
-Checkout **`lesson/01-names-and-functions`** and open `docs/WALKTHROUGH.MD` there to see how naming and small methods improve `MainWindow` without changing behavior.
+Open [`label_store.py`](../label_store.py).
+
+- **`LabelStore`** protocol: `load()` / `save(text)`.
+- **`InMemoryLabelStore`** — trivial, perfect for unit tests ([`tests/test_label_store.py`](../tests/test_label_store.py)).
+- **`FileLabelStore`** — persists next to the app (`saved_name.txt`, gitignored).
+
+**Try it:** type a name, **Save**, quit, run again, **Load** — the field should repopulate (if the file is writable).
+
+**Why this is good:** Persistence is an **adapter**; domain and controller stay free of `Path` details except at the root.
+
+---
+
+## 3. Strategy pattern — greeting wording
+
+Open [`greeting_strategy.py`](../greeting_strategy.py) and [`display_line.py`](../display_line.py).
+
+- **`GreetingStrategy`** is a **`Protocol`** in `display_line.py` (structural typing — no inheritance required).
+- Implementations: **`DefaultHelloStrategy`**, **`CasualGreetingStrategy`**, **`FormalGreetingStrategy`**.
+- **`apply_greeting_message(raw, strategy)`** validates once, then calls **`strategy.format(normalized_name)`**.
+
+Open [`greeter_view.py`](../greeter_view.py): the **combo box** chooses which strategy slot maps to which implementation (indices line up with the tuple in `main.py`).
+
+**Why this is good:** Adding a fourth tone (“Fleet / driver / service”) is a **new class + one combo entry + wire in main**, not a giant `switch`.
+
+---
+
+## 4. View additions
+
+Still in [`greeter_view.py`](../greeter_view.py): **Load** / **Save** buttons emit signals; the view does not call the store.
+
+**Why this is good:** Same SRP story as Lesson 02 — view knows clicks; controller knows side effects.
+
+---
+
+## 5. Error handling (carried from Lesson 03)
+
+In [`greeter_controller.py`](../greeter_controller.py):
+
+- Invalid name → **`QMessageBox`** (from Lesson 03).
+- **Load/Save** → `try` / `except OSError` → **`QMessageBox.warning`** so IO failures are visible.
+
+---
+
+## 6. Diff vs Lesson 03
+
+```bash
+git diff lesson/03-dry-and-error-handling...lesson/04-dip-repository-strategy
+```
+
+---
+
+## 7. Full tour from baseline
+
+```bash
+git diff main...lesson/04-dip-repository-strategy
+```
+
+Use this when you want one narrative: “from one file to layered, tested, swappable design.”
+
+---
+
+## 8. Reflect
+
+1. To use **`InMemoryLabelStore`** in a headless integration test, which file would you **not** need to import?
+2. Name a change that touches **only** `main.py` and **not** `GreeterController`.
+
+---
+
+## You’re done with the four lessons
+
+Re-read [CURRICULUM.MD](CURRICULUM.MD) and tie each branch to interview talking points (boundaries, testability, swappable adapters).
