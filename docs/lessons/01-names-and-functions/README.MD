@@ -29,4 +29,4 @@ Unchanged from baseline: run `pytest` from the repo root; coverage stays on [`di
 
 ## Related
 
-- [Curriculum table (all lessons)](../CURRICULUM.MD)
+- [Curriculum table (all lessons)](../../CURRICULUM.MD)

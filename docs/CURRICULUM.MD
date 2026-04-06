@@ -33,6 +33,8 @@ git diff main...lesson/01-names-and-functions
 
 ## Branch 2 — `lesson/02-srp-and-separation-of-concerns`
 
+**Lesson doc:** [lessons/02-srp-and-separation-of-concerns/README.MD](lessons/02-srp-and-separation-of-concerns/README.MD)
+
 | | |
 |--|--|
 | **Topics** | Single Responsibility · separation of concerns |
@@ -40,9 +42,15 @@ git diff main...lesson/01-names-and-functions
 | **Code** | **View** (widgets only) · **controller** (wiring) · **domain** (no Qt imports) |
 | **Tests** | pytest on domain (and thin controller if useful) |
 
+```bash
+git diff main...lesson/02-srp-and-separation-of-concerns
+```
+
 ---
 
 ## Branch 3 — `lesson/03-dry-and-error-handling`
+
+**Lesson doc:** [lessons/03-dry-and-error-handling/README.MD](lessons/03-dry-and-error-handling/README.MD)
 
 | | |
 |--|--|
@@ -51,9 +59,15 @@ git diff main...lesson/01-names-and-functions
 | **Code** | Single validation path; visible failures for invalid input or simulated I/O errors |
 | **Tests** | pytest for validation / error outcomes |
 
+```bash
+git diff main...lesson/03-dry-and-error-handling
+```
+
 ---
 
 ## Branch 4 — `lesson/04-dip-repository-strategy`
+
+**Lesson doc:** [lessons/04-dip-repository-strategy/README.MD](lessons/04-dip-repository-strategy/README.MD)
 
 | | |
 |--|--|
@@ -62,12 +76,19 @@ git diff main...lesson/01-names-and-functions
 | **Code** | `Protocol`/ABC for repository (in-memory vs file) and strategy (two formatters); controller depends on ports; **`main.py`** composes concrete types |
 | **Tests** | pytest with fakes; no GUI driver required |
 
+```bash
+git diff main...lesson/04-dip-repository-strategy
+```
+
 ---
 
 ## Video / git workflow
 
 ```bash
 git diff main...lesson/01-names-and-functions
+git diff main...lesson/02-srp-and-separation-of-concerns
+git diff main...lesson/03-dry-and-error-handling
+git diff main...lesson/04-dip-repository-strategy
 ```
 
 Optional: tag `baseline-widgets` on `main` after baseline is stable.
