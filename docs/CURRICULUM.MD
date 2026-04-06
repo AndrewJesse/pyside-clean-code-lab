@@ -8,7 +8,7 @@ Super-minimal **PySide6 Qt Widgets** UI (one window) to show *why* structure mat
 - `QPushButton` — **Apply** updates a `QLabel` from pure Python logic.
 - **Lesson 04 only** — add **Load / Save** plus a **style** picker (`QComboBox` or radios) for repository + strategy.
 
-Baseline on `main`: line edit, Apply, label; logic in [`display_line.py`](display_line.py); tests in [`tests/`](tests/).
+Baseline on `main`: line edit, Apply, label; logic in [`display_line.py`](../display_line.py); tests in [`tests/`](../tests/).
 
 ---
 
@@ -19,7 +19,7 @@ Baseline on `main`: line edit, Apply, label; logic in [`display_line.py`](displa
 | **Topics** | Meaningful names · small functions (one level of abstraction per method) |
 | **UI** | Same as baseline |
 | **Code** | Refactor a dense `MainWindow` into **small private methods** with intention-revealing names (`_configure_window`, `_create_name_field`, `_build_layout`, `_wire_signals`, `_refresh_greeting_label`, …); behavior unchanged |
-| **Tests** | Same pytest on [`display_line.py`](display_line.py) |
+| **Tests** | Same pytest on [`display_line.py`](../display_line.py) |
 
 Compare to `main`:
 

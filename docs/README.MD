@@ -1,6 +1,6 @@
 # PySide Clean Code Lab
 
-Small **PySide6 Qt Widgets** demo repo for teaching **Clean Code** and **layering**: one minimal window, pure Python logic where it is easy to test, and **four lesson branches** (see [CURRICULUM.MD](CURRICULUM.MD); `lesson/01-names-and-functions` exists, others pending).
+Small **PySide6 Qt Widgets** demo repo for teaching **Clean Code** and **layering**: one minimal window, pure Python logic where it is easy to test, and **four lesson branches** (see [CURRICULUM.MD](CURRICULUM.MD); `lesson/01-names-and-functions` exists, others pending). Run commands from the **repository root** (parent of `docs/`).
 
 **No QML** — widgets only, on purpose.
 
@@ -18,9 +18,9 @@ python main.py
 
 | File | Role |
 |------|------|
-| [`main.py`](main.py) | Tiny `MainWindow`: line edit, Apply, label |
-| [`display_line.py`](display_line.py) | Pure string logic (no Qt) |
-| [`tests/test_display_line.py`](tests/test_display_line.py) | pytest |
+| [`main.py`](../main.py) | Tiny `MainWindow`: line edit, Apply, label |
+| [`display_line.py`](../display_line.py) | Pure string logic (no Qt) |
+| [`tests/test_display_line.py`](../tests/test_display_line.py) | pytest |
 
 ## Lessons
 
